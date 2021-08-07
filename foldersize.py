@@ -3,10 +3,10 @@ import pandas as pd
 import sys
 import humanize as hu
 
-if len(sys.argv) < 2:
-    start_path = "."
-else:
+if len(sys.argv) > 1 and os.path.exists(sys.argv[1]):
     start_path = sys.argv[1]
+else:
+    start_path = "."
 
 size_list = []
 total_size = 0
@@ -20,8 +20,9 @@ for dirpath, dirnames, filenames in os.walk(start_path):
             total_size += os.path.getsize(fp)
             path_size += os.path.getsize(fp)
 
-    size_list.append({"name": dirpath, "size": hu.naturalsize(path_size, binary= True)})
-    print(dirpath, ":", hu.naturalsize(path_size, binary= True))
+    size_list.append(
+        {"name": dirpath, "size": hu.naturalsize(path_size, binary=True)})
+    print(dirpath, ":", hu.naturalsize(path_size, binary=True))
 
 pd.DataFrame(size_list).to_excel('output.xlsx')
 
